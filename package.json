@@ -1,11 +1,36 @@
 {
   "name": "claude-bridge-mcp",
   "version": "1.0.0",
+  "description": "MCP server that connects the Claude Bridge Chrome extension to Claude Code — click any UI element and get its React component, source file, props, and styles as context",
   "type": "module",
   "main": "server.js",
   "bin": {
     "claude-bridge-mcp": "server.js"
   },
+  "keywords": [
+    "mcp",
+    "claude",
+    "claude-code",
+    "react",
+    "devtools",
+    "chrome-extension",
+    "model-context-protocol"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Raymond-Youssef/claude-bridge-mcp.git"
+  },
+  "homepage": "https://github.com/Raymond-Youssef/claude-bridge-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/Raymond-Youssef/claude-bridge-mcp/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "server.js"
+  ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "ws": "^8.0.0"
