@@ -16,7 +16,12 @@ wss.on('connection', (ws) => {
   console.error('[claude-bridge] Chrome extension connected');
 
   ws.on('message', (data) => {
-    selectedElement = JSON.parse(data.toString());
+    try {
+      selectedElement = JSON.parse(data.toString());
+    } catch {
+      console.error('[claude-bridge] Ignoring malformed message');
+      return;
+    }
     elementHistory.unshift(selectedElement);
     if (elementHistory.length > 10) elementHistory.pop();
 
@@ -63,17 +68,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
   if (name === 'get_selected_element') {
-    const index = args?.index || 0;
-    const el = elementHistory[index];
-
-    if (!el) {
+    const index = args?.index ?? 0;
+    if (index < 0 || index >= elementHistory.length) {
       return {
         content: [{
           type: 'text',
-          text: 'No element selected. Enable inspect mode and Option+Click an element in Chrome.'
+          text: elementHistory.length === 0
+            ? 'No element selected. Enable inspect mode and click an element in Chrome.'
+            : `Invalid index ${index}. History has ${elementHistory.length} element(s) (0–${elementHistory.length - 1}).`
         }]
       };
     }
+    const el = elementHistory[index];
 
     const lines = [];
 
@@ -139,8 +145,22 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     return { content: [{ type: 'text', text: summary }] };
   }
+
+  return {
+    content: [{ type: 'text', text: `Unknown tool: ${name}` }],
+    isError: true
+  };
 });
 
 const transport = new StdioServerTransport();
 await server.connect(transport);
 console.error(`[claude-bridge] MCP server running, WebSocket on :${WS_PORT}`);
+
+function shutdown() {
+  console.error('[claude-bridge] Shutting down...');
+  wss.close();
+  process.exit(0);
+}
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);

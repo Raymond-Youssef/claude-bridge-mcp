@@ -25,6 +25,7 @@
   "bugs": {
     "url": "https://github.com/Raymond-Youssef/claude-bridge-mcp/issues"
   },
+  "author": "Raymond Youssef",
   "engines": {
     "node": ">=18"
   },
