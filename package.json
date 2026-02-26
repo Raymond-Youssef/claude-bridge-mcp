@@ -1,0 +1,13 @@
+{
+  "name": "claude-bridge-mcp",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "server.js",
+  "bin": {
+    "claude-bridge-mcp": "server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "ws": "^8.0.0"
+  }
+}
